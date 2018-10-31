@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="../templates/uiConMenu.xhtml">
+	<ui:define name="content">
+		<h:form id="idLista">
+		<p:commandButton action="#{CRUDVuelo.nuevo}"  
+									 oncomplete="PF('wRegistro').show()"
+									 update=":idWRegistro"
+									 value="Nuevo Medicamento" />
+			<p:dataTable value="#{CRUDMedicamento.listaMedicamento}" var="fila"
+							rowKey="#{fila.codMedicamento}" selectionMode="single" id="tblMedicamento" 
+							binding="#{CRUDMedicamento.dtFila}" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<f:facet name="header">Lista Medicamento</f:facet>
+				<p:column headerText="Código">
+					<h:outputText value="#{fila.codMedicamento}"/>
+				</p:column>
+				<p:column headerText="Nombre" style="width:180px">
+					<h:outputText value="#{fila.nomMedicamento}"/>
+				</p:column>
+				<p:column headerText="Precio" style="width:100px">
+					<h:outputText value="#{fila.precio}">
+						<f:convertNumber minFractionDigits="2" currencySymbol="S/. " type="currency"
+						locale="en_US"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Stock">
+					<h:outputText value="#{fila.stock}"/>
+				</p:column>
+				<p:column headerText="Fecha" style="width:80px">
+					<h:outputText value="#{fila.fecVencimiento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Laboratorio" style="width:380px">
+					<h:outputText value="#{fila.laboratorio.nomLaboratorio}"/>
+				</p:column>
+				<p:column headerText="Tipo" style="width:380px">
+					<h:outputText value="#{fila.tipoMedicamento.nomTipoMedicamento}"/>
+				</p:column>
+				<p:column headerText="Modelo" style="width:100px">
+					<h:outputText value="#{fila.modelo.nomModelo}"/>
+				</p:column>
+				<p:column headerText="">
+					<p:commandButton action="#{CRUDMedicamento.buscarEditar}"  
+									 oncomplete="PF('wEditarMedicamento').show()"
+									 update=":idWEditar :idEdita:idFoto"
+									 icon="fa fa-fw fa-edit">
+							
+					</p:commandButton>				 
+				</p:column>
+				<p:column headerText="">
+					<p:commandButton 	action="#{CRUDMedicamento.busca}"  
+									 	oncomplete="PF('cd').show()"
+										icon="fa fa-fw fa-remove"/>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog message="Seguro de Elimnar" widgetVar="cd">
+				<p:commandButton value="Aceptar"  action="#{CRUDMedicamento.elimina}" 
+					oncomplete="PF('cd').hide()" update=":idLista:tblMedicamento"/>
+				<p:commandButton value="Cancelar" oncomplete="PF('cd').hide()"/>
+		    </p:confirmDialog>
+		</h:form>
+		<!-- Dialogo de registrar medicamento -->
+		<p:dialog header="Registro de Medicamento" modal="true" widgetVar="wRegistro"
+			resizable="false" draggable="false" id="idWRegistro">
+			<h:form>
+					<p:growl showDetail="true" autoUpdate="true"/>
+					<p:panelGrid columns="2" columnClasses="text-right,ui-fluid" styleClass="ui-panelgrid-blank">
+							<p:outputLabel value="Nombre"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.nomMedicamento}" 
+									required="true" requiredMessage="Ingrese Nombre"/>
+							<p:outputLabel value="Laboratorio"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.laboratorio.codLaboratorio}"
+												required="true" requiredMessage="Seleccione Laboratorio">					
+								<p:ajax listener="#{CRUDMedicamento.cargarTipoMedicamento}" update="idTipoMedicamento" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaLaboratorio}" var="fila"
+									itemLabel="#{fila.nomLaboratorio}" 
+									itemValue="#{fila.codLaboratorio}"/>
+							</p:selectOneMenu>	
+							<p:outputLabel value="Tipo Medicamento"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.tipoMedicamento.codTipoMedicamento}"
+												required="true" requiredMessage="Seleccione Tipo Medicamento"
+												id="idTipoMedicamento">
+								<p:ajax listener="#{CRUDMedicamento.cargarModelo}" update="idModelo" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaTipoMedicamento}" var="fila"
+									itemValue="#{fila.codTipoMedicamento}" 
+									itemLabel="#{fila.nomTipoMedicamento}"/>
+							</p:selectOneMenu>
+							<p:outputLabel value="Modelo"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.modelo.codModelo}"
+												required="true" requiredMessage="Seleccione Modelo"
+												id="idModelo">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaModelo}" var="fila"
+									itemValue="#{fila.codModelo}" 
+									itemLabel="#{fila.nomModelo}"/>
+							</p:selectOneMenu>
+							
+							
+													
+							<p:outputLabel value="Precio"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.precio}"
+												required="true" requiredMessage="Ingrese precio"
+												validatorMessage="Precio mayor igual a 0.10">
+												<f:validateDoubleRange minimum="0.10"/>
+							</p:inputText>					
+							<p:outputLabel value="Stock"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.stock}"
+												required="true" requiredMessage="Ingrese stock"
+												validatorMessage="Stock mayor a 0">
+												<f:validateLongRange minimum="1"/>				
+							</p:inputText>					
+							<p:outputLabel value="Fecha"/>
+							<p:calendar value="#{CRUDMedicamento.medicamento.fecVencimiento}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd" 
+								required="true" requiredMessage="Seleccione fecha"/>
+							<p:outputLabel value="Foto"/>
+								<p:fileUpload  label="Elegir" cancelLabel="Cancelar" uploadLabel="Subir" 
+									fileUploadListener="#{CRUDMedicamento.subirImagen}"/>
+							<f:facet name="footer">
+								<h:panelGroup style = "display:block; text-align:center">
+									<p:commandButton value="Grabar" action="#{CRUDMedicamento.registra}" 
+										oncomplete="if (!args.validationFailed) PF('wRegistro').hide();"
+										ajax="true" update=":idLista:tblMedicamento" />
+									<p:commandButton value="Cancelar" oncomplete="PF('wRegistro').hide();"
+										immediate="true" />
+								</h:panelGroup>			
+							</f:facet>	
+						</p:panelGrid>
+			</h:form>
+		</p:dialog>
+		<!-- Dialogo de editar medicamento -->
+		<p:dialog id="idWEditar" header="Editar Medicamento" modal="true" widgetVar="wEditarMedicamento"
+			resizable="false" draggable="false">
+			<h:form id="idEdita">
+					<p:growl showDetail="true" autoUpdate="true"/>
+					<p:panelGrid columns="2" columnClasses="text-right,ui-fluid" styleClass="ui-panelgrid-blank">
+							<p:outputLabel value="Nombre"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.nomMedicamento}" 
+									required="true" requiredMessage="Ingrese Nombre"/>
+							<p:outputLabel value="Laboratorio"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.laboratorio.codLaboratorio}"
+												required="true" requiredMessage="Seleccione Laboratorio">
+								<p:ajax listener="#{CRUDMedicamento.cargarTipoMedicamento}" update="idTipoMedicamento" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaLaboratorio}" var="fila"
+									itemLabel="#{fila.nomLaboratorio}" 
+									itemValue="#{fila.codLaboratorio}"/>
+							</p:selectOneMenu>
+							<p:outputLabel value="Tipo Medicamento"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.tipoMedicamento.codTipoMedicamento}"
+												required="true" requiredMessage="Seleccione Tipo Medicamento"
+												id="idTipoMedicamento">
+								<p:ajax listener="#{CRUDMedicamento.cargarModelo}" update="idModelo" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaTipoMedicamento}" var="fila"
+									itemValue="#{fila.codTipoMedicamento}" 
+									itemLabel="#{fila.nomTipoMedicamento}"/>
+							</p:selectOneMenu>
+							<p:outputLabel value="Modelo"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.modelo.codModelo}"
+												required="true" requiredMessage="Seleccione Modelo"
+												id="idModelo">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaModelo}" var="fila"
+									itemValue="#{fila.codModelo}" 
+									itemLabel="#{fila.nomModelo}"/>
+							</p:selectOneMenu>
+							<p:outputLabel value="Precio"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.precio}"
+												required="true" requiredMessage="Ingrese precio"
+												validatorMessage="Precio mayor igual a 0.10">
+												<f:validateDoubleRange minimum="0.10"/>
+							</p:inputText>					
+							<p:outputLabel value="Stock"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.stock}"
+												required="true" requiredMessage="Ingrese stock"
+												validatorMessage="Stock mayor a 0">
+												<f:validateLongRange minimum="1"/>				
+							</p:inputText>					
+							<p:outputLabel value="Fecha"/>
+							<p:calendar value="#{CRUDMedicamento.medicamento.fecVencimiento}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd" 
+								required="true" requiredMessage="Seleccione fecha"/>
+							<p:outputLabel value="Foto"/>
+							<p:fileUpload  label="Elegir" cancelLabel="Cancelar" uploadLabel="Subir" 
+								fileUploadListener="#{CRUDMedicamento.subirImagen}" update="idFoto"/>		
+							<p:graphicImage value="/#{CRUDMedicamento.medicamento.imagen}" width="60" 
+								height="60" id="idFoto" cache="false"/>
+							
+							<f:facet name="footer">
+							   <h:panelGroup style = "display:block; text-align:center">	
+								<p:commandButton value="Grabar" action="#{CRUDMedicamento.actualiza}" 
+									oncomplete="if (!args.validationFailed) PF('wEditarMedicamento').hide();"
+									ajax="true" update=":idLista:tblMedicamento" />
+								<p:commandButton value="Cancelar" oncomplete="PF('wEditarMedicamento').hide();"
+									immediate="true" />	
+							  </h:panelGroup>		
+							</f:facet>	
+						</p:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>
+

@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+<ui:composition template="../templates/uiConMenu.xhtml">
+	<ui:define name="content">
+		<h:form id="idLista">
+		<p:commandButton action="#{CRUDVuelo.nuevo}"  
+									 oncomplete="PF('wRegistro').show()"
+									 update=":idWRegistro"
+									 value="Nuevo Vuelo" />
+			<p:dataTable value="#{CRUDVuelo.listaVuelo}" var="fila"
+							rowKey="#{fila.codVuelo}" selectionMode="single" id="tblMedicamento" 
+							binding="#{CRUDVuelo.dtFila}" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<f:facet name="header">Lista de Vuelos</f:facet>
+				<p:column headerText="Código">
+					<h:outputText value="#{fila.codVuelo}"/>
+				</p:column>
+				
+				<p:column headerText="Pais Origen" style="width:100px">
+					<h:outputText value="#{fila.pais1.nomPais}"/>
+				</p:column>
+				<p:column headerText="Ciudad" style="width:100px">
+					<h:outputText value="#{fila.ciudad1.nomCiudad}"/>
+				</p:column>
+				<p:column headerText="Aeropuerto" style="width:100px">
+					<h:outputText value="#{fila.aeropuerto1.nomAeropuerto}"/>
+				</p:column>
+				<p:column headerText="Pais Destino" style="width:100px">
+					<h:outputText value="#{fila.pais2.nomPais}"/>
+				</p:column>
+				<p:column headerText="Ciudad Destino" style="width:100px">
+					<h:outputText value="#{fila.ciudad2.nomCiudad}"/>
+				</p:column>
+				<p:column headerText="Aeropuerto Destino" style="width:100px">
+					<h:outputText value="#{fila.aeropuerto2.nomAeropuerto}"/>
+				</p:column>
+				
+				<p:column headerText="Nombre Aerolinea" style="width:100px">
+					<h:outputText value="#{fila.aerolinea.nomAerolinea}"/>
+				</p:column>
+				<p:column headerText="Tipo Avion" style="width:100px">
+					<h:outputText value="#{fila.tipoAvion.nomTipoAvion}"/>
+				</p:column>
+				<p:column headerText="Capacidad">
+					<h:outputText value="#{fila.capacidad}"/>
+				</p:column>
+				<p:column headerText="Tarifa" style="width:100px">
+					<h:outputText value="#{fila.tarifa}">
+						<f:convertNumber minFractionDigits="2" currencySymbol="S/. " type="currency"
+						locale="en_US"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Partida" style="width:100px">
+					<h:outputText value="#{fila.fecPartida}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora de partida" style="width:100px">
+					<h:outputText value="#{fila.horaPartida}"/>
+				</p:column>
+				<p:column headerText="Fecha Llegada" style="width:100px">
+					<h:outputText value="#{fila.fecDestino}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora de llegada" style="width:100px">
+					<h:outputText value="#{fila.horaDestino}"/>
+				</p:column>
+				<p:column headerText="Tipo de Vuelo" style="width:280px">
+					<h:outputText value="#{fila.tipoVuelo.nomTipoVuelo}"/>
+				</p:column>
+						
+				
+			</p:dataTable>
+			
+		</h:form>
+		<!-- Dialogo de registrar vuelo -->
+		<p:dialog header="Registro de Vuelo" modal="true" widgetVar="wRegistro"
+			resizable="false" draggable="false" id="idWRegistro">
+			<h:form>
+					<p:growl showDetail="true" autoUpdate="true"/>
+					<p:panelGrid columns="2" columnClasses="text-right,ui-fluid" styleClass="ui-panelgrid-blank">
+							
+							
+														
+							<p:outputLabel value="Pais Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.pais1.codPais}">
+							<p:ajax listener="#{CRUDVuelo.cargarCiudad1}" update="idciudad1" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaPais}" var="fila"
+									itemLabel="#{fila.nomPais}" 
+									itemValue="#{fila.codPais}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Ciudad Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.ciudad1.codCiudad}"
+												required="true" requiredMessage="Seleccione Ciudad"
+												id="idciudad1">
+								<p:ajax listener="#{CRUDVuelo.cargarAeropuerto1}" update="idaero1" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaCiudad1}" var="fila"
+									itemValue="#{fila.codCiudad}" 
+									itemLabel="#{fila.nomCiudad}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Aeropuerto Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.aeropuerto1.codAeropuerto}"
+												required="true" requiredMessage="Seleccione Aeropuerto"
+												id="idaero1">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaAeropuerto1}" var="fila"
+									itemValue="#{fila.codAeropuerto}" 
+									itemLabel="#{fila.nomAeropuerto}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Pais Destino"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.pais2.codPais}">
+							<p:ajax listener="#{CRUDVuelo.cargarCiudad2}" update="idciudad2" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaPais}" var="fila"
+									itemLabel="#{fila.nomPais}" 
+									itemValue="#{fila.codPais}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Ciudad Destino"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.ciudad2.codCiudad}"
+												required="true" requiredMessage="Seleccione Ciudad"
+												id="idciudad2">
+								<p:ajax listener="#{CRUDVuelo.cargarAeropuerto2}" update="idaero2" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaCiudad2}" var="fila"
+									itemValue="#{fila.codCiudad}" 
+									itemLabel="#{fila.nomCiudad}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Aeropuerto Destino"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.aeropuerto2.codAeropuerto}"
+												required="true" requiredMessage="Seleccione Aeropuerto"
+												id="idaero2">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaAeropuerto2}" var="fila"
+									itemValue="#{fila.codAeropuerto}" 
+									itemLabel="#{fila.nomAeropuerto}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Aerolinea"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.aerolinea.codAerolinea}">
+							<p:ajax listener="#{CRUDVuelo.cargarTipoAvion}" update="idtipoA" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaAerolinea}" var="fila"
+									itemLabel="#{fila.nomAerolinea}" 
+									itemValue="#{fila.codAerolinea}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Tipo Avion"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.tipoAvion.codTipoAvion}"
+												required="true" requiredMessage="Seleccione Avion"
+												id="idtipoA">							
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaTipoAvion}" var="fila"
+									itemValue="#{fila.codTipoAvion}" 
+									itemLabel="#{fila.nomTipoAvion}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Capacidad"/>
+							<p:inputText value="#{CRUDVuelo.vuelo.capacidad}"
+												required="true" requiredMessage="Ingrese capacidad"
+												validatorMessage="capacidad mayor a 10">
+												<f:validateLongRange minimum="10"/>				
+							</p:inputText>
+							<p:outputLabel value="Tarifa"/>
+							<p:inputText value="#{CRUDVuelo.vuelo.tarifa}"
+												required="true" requiredMessage="Ingrese tarifa"
+												validatorMessage="Precio mayor igual a 0.10">
+												<f:validateDoubleRange minimum="0.10"/>
+							</p:inputText>	
+							
+							<p:outputLabel value="Fecha Partida"/>
+							<p:calendar value="#{CRUDVuelo.vuelo.fecPartida}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd" 
+								required="true" requiredMessage="Seleccione fecha"/>
+							
+							<p:outputLabel value="Hora Partida(24:00)"/>
+							<p:inputText value="#{CRUDVuelo.vuelo.horaPartida}" 
+									required="true" requiredMessage="Ingrese hora"/>
+						
+							<p:outputLabel value="Fecha Llegada"/>
+							<p:calendar value="#{CRUDVuelo.vuelo.fecDestino}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd" 
+								required="true" requiredMessage="Seleccione fecha"/>
+							
+							<p:outputLabel value="Hora Llegada(24:00)"/>
+							<p:inputText value="#{CRUDVuelo.vuelo.horaDestino}" 
+									required="true" requiredMessage="Ingrese hora"/>
+							
+							
+							<p:outputLabel value="Tipo Vuelo"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.tipoVuelo.codTipoVuelo}">
+							
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaTipoVuelo}" var="fila"
+									itemLabel="#{fila.nomTipoVuelo}" 
+									itemValue="#{fila.codTipoVuelo}"/>
+							</p:selectOneMenu>
+												
+							
+							<f:facet name="footer">
+								<h:panelGroup style = "display:block; text-align:center">
+									<p:commandButton value="Grabar" action="#{CRUDVuelo.registra}" 
+										oncomplete="if (!args.validationFailed) PF('wRegistro').hide();"
+										ajax="true" update=":idLista:tblMedicamento" />
+									<p:commandButton value="Cancelar" oncomplete="PF('wRegistro').hide();"
+										immediate="true" />
+								</h:panelGroup>			
+							</f:facet>	
+						</p:panelGrid>
+			</h:form>
+		</p:dialog>
+		<!-- Dialogo de editar medicamento -->		
+	</ui:define>
+</ui:composition>
+</html>
+

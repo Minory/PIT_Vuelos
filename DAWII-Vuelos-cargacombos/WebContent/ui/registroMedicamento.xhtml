@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/uiConMenu.xhtml">
+	<ui:define name="content">
+		<h:form>	       
+				<p:fieldset legend="Medicamento" style="margin-bottom: 15px;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4 text-right,ui-grid-col-8" layout="grid" >
+							<p:outputLabel value="Nombre"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.nomMedicamento}"/>
+							<p:outputLabel value="Laboratorio"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.laboratorio.codLaboratorio}">
+							<p:ajax listener="#{CRUDMedicamento.cargarTipoMedicamento}" update="idTipoMedicamento" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaLaboratorio}" var="fila"
+									itemLabel="#{fila.nomLaboratorio}" 
+									itemValue="#{fila.codLaboratorio}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Tipo Medicamento"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.tipoMedicamento.codTipoMedicamento}"
+												required="true" requiredMessage="Seleccione Tipo Medicamento"
+												id="idTipoMedicamento">
+								<p:ajax listener="#{CRUDMedicamento.cargarModelo}" update="idModelo" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaTipoMedicamento}" var="fila"
+									itemValue="#{fila.codTipoMedicamento}" 
+									itemLabel="#{fila.nomTipoMedicamento}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Modelo"/>
+							<p:selectOneMenu value="#{CRUDMedicamento.medicamento.modelo.codModelo}"
+												required="true" requiredMessage="Seleccione Modelo"
+												id="idModelo">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDMedicamento.listaModelo}" var="fila"
+									itemValue="#{fila.codModelo}" 
+									itemLabel="#{fila.nomModelo}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Precio"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.precio}"/>
+							<p:outputLabel value="Stock"/>
+							<p:inputText value="#{CRUDMedicamento.medicamento.stock}"/>
+							<p:outputLabel value="Fecha"/>
+							<p:calendar value="#{CRUDMedicamento.medicamento.fecVencimiento}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd"/>
+							<f:facet name="footer">
+								<p:commandButton value="Grabar" action="#{CRUDMedicamento.registra}"/>
+							</f:facet>	
+						</p:panelGrid>
+				</p:fieldset>
+			</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+
+
+

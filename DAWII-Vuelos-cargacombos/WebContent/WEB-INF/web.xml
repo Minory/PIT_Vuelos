@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+	<display-name>Farmacia</display-name>
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Production</param-value>
+	</context-param>
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+	<context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>omega</param-value>
+	</context-param>
+  <context-param>
+    <param-name>primefaces.FONT_AWESOME</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <mime-mapping>
+    <extension>svg</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>svg#latobold</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>svg#latoblack</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>svg#latolight</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>svg#latoregular</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>
+  <mime-mapping>
+    <extension>svg#fontawesomeregular</extension>
+    <mime-type>image/svg+xml</mime-type>
+  </mime-mapping>	
+
+</web-app>

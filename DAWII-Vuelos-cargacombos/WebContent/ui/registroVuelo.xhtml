@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/uiConMenu.xhtml">
+	<ui:define name="content">
+		<h:form>	       
+				<p:fieldset legend="Vuelo" style="margin-bottom: 15px;">
+						<p:panelGrid columns="2" columnClasses="ui-grid-col-4 text-right,ui-grid-col-8" layout="grid" >
+							
+														
+							<p:outputLabel value="Pais Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.pais1.codPais}">
+							<p:ajax listener="#{CRUDVuelo.cargarCiudad1}" update="idTipoMedicamento" />
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaPais}" var="fila"
+									itemLabel="#{fila.nomPais}" 
+									itemValue="#{fila.codPais}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Ciudad Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.ciudad1.codCiudad}"
+												required="true" requiredMessage="Seleccione Ciudad"
+												id="idTipoMedicamento">
+								<p:ajax listener="#{CRUDVuelo.cargarAeropuerto1}" update="idModelo" />				
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaCiudad}" var="fila"
+									itemValue="#{fila.codCiudad}" 
+									itemLabel="#{fila.nomCiudad}"/>
+							</p:selectOneMenu>
+							
+							<p:outputLabel value="Aeropuerto Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.vuelo.aeropuerto1.codAeropuerto}"
+												required="true" requiredMessage="Seleccione Aeropuerto"
+												id="idModelo">
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaAeropuerto}" var="fila"
+									itemValue="#{fila.codAeropuerto}" 
+									itemLabel="#{fila.nomAeropuerto}"/>
+							</p:selectOneMenu>
+							
+							
+							<f:facet name="footer">
+								<p:commandButton value="Grabar" action="#{CRUDVuelo.registra}"/>
+							</f:facet>	
+						</p:panelGrid>
+				</p:fieldset>
+			</h:form>
+	</ui:define>
+</ui:composition>
+</html>
+
+
+

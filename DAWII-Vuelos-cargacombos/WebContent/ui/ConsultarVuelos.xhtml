@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<ui:composition template="../templates/uiConMenu.xhtml">
+	<ui:define name="content">
+	 <h:form id="frmLista">
+	   <p:fieldset legend="Busca tu vuelo" style="margin-bottom: 50px;">
+	   
+	   <p:panelGrid columns="8" columnClasses="ui-grid-col-2 text-right,ui-grid-col-3" layout="grid" >
+	   
+	   <p:outputLabel value="Pais Origen"/>
+						<p:selectOneMenu value="#{CRUDVuelo.codPais1}">		
+						<p:ajax listener="#{CRUDVuelo.cargarCiudadBuscar1}" update="idciudad1" />				
+							<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+							<f:selectItems value="#{CRUDVuelo.listaPais}" var="fila"
+									itemLabel="#{fila.nomPais}" 
+									itemValue="#{fila.codPais}"/>
+						</p:selectOneMenu>
+						
+		<p:outputLabel value="Ciudad Origen"/>
+							<p:selectOneMenu value="#{CRUDVuelo.codCiudad1}"
+												required="true" requiredMessage="Seleccione Ciudad"
+												id="idciudad1">												
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaCiudadB1}" var="fila"
+									itemValue="#{fila.codCiudad}" 
+									itemLabel="#{fila.nomCiudad}"/>
+							</p:selectOneMenu>				
+						
+		<p:outputLabel value="Pais Destino"/>
+						<p:selectOneMenu value="#{CRUDVuelo.codPais2}">
+						<p:ajax listener="#{CRUDVuelo.cargarCiudadBuscar2}" update="idciudad2" />					
+							<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+							<f:selectItems value="#{CRUDVuelo.listaPais}" var="fila"
+									itemLabel="#{fila.nomPais}" 
+									itemValue="#{fila.codPais}"/>
+						</p:selectOneMenu>
+						
+		<p:outputLabel value="Ciudad Destino"/>
+							<p:selectOneMenu value="#{CRUDVuelo.codCiudad2}"
+												required="true" requiredMessage="Seleccione Ciudad"
+												id="idciudad2">												
+								<f:selectItem itemLabel="[Seleccione]" itemValue=" "/>
+								<f:selectItems value="#{CRUDVuelo.listaCiudadB2}" var="fila"
+									itemValue="#{fila.codCiudad}" 
+									itemLabel="#{fila.nomCiudad}"/>
+							</p:selectOneMenu>				
+		
+		<p:outputLabel value="Fecha Partida"/>
+						<p:calendar value="#{CRUDVuelo.fechap}"
+								locale="es" showOn="button" pattern="yyyy-MM-dd" 
+								required="true" requiredMessage="Seleccione fecha"/>
+								
+		<p:outputLabel value="Tipo de Vuelo"/>
+						<p:selectOneMenu value="#{CRUDVuelo.codTipoVuelo}">						
+							<f:selectItem itemLabel="[Seleccione]" itemValue="1"/>
+							<f:selectItems value="#{CRUDVuelo.listaTipoVuelo}" var="fila"
+									itemLabel="#{fila.nomTipoVuelo}" 
+									itemValue="#{fila.codTipoVuelo}"/>
+						</p:selectOneMenu>
+		
+		<p:commandButton value="Consulta" action="#{CRUDVuelo.buscaVuelos}" 
+		update="frmLista:idLista"/>
+	 
+	 	</p:panelGrid>
+		</p:fieldset>
+		
+		<p:dataTable value="#{CRUDVuelo.listaVuelo2}" 
+			var="fila" id="idLista"
+			rowKey="#{fila.codVuelo}" selectionMode="single" 
+			rows="10"
+            paginator="true"
+            paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                            					{NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			binding="#{CRUDVuelo.dtFila}">
+			
+			<f:facet name="header">Lista de Vuelos</f:facet>
+			
+				<p:column headerText="Código">
+					<h:outputText value="#{fila.codVuelo}"/>
+				</p:column>
+				
+				<p:column headerText="Pais Origen" style="width:100px">
+					<h:outputText value="#{fila.pais1.nomPais}"/>
+				</p:column>
+				<p:column headerText="Ciudad" style="width:100px">
+					<h:outputText value="#{fila.ciudad1.nomCiudad}"/>
+				</p:column>
+				<p:column headerText="Aeropuerto" style="width:100px">
+					<h:outputText value="#{fila.aeropuerto1.nomAeropuerto}"/>
+				</p:column>
+				<p:column headerText="Pais Destino" style="width:100px">
+					<h:outputText value="#{fila.pais2.nomPais}"/>
+				</p:column>
+				<p:column headerText="Ciudad Destino" style="width:100px">
+					<h:outputText value="#{fila.ciudad2.nomCiudad}"/>
+				</p:column>
+				<p:column headerText="Aeropuerto Destino" style="width:100px">
+					<h:outputText value="#{fila.aeropuerto2.nomAeropuerto}"/>
+				</p:column>
+				
+				<p:column headerText="Nombre Aerolinea" style="width:100px">
+					<h:outputText value="#{fila.aerolinea.nomAerolinea}"/>
+				</p:column>
+				<p:column headerText="Tipo Avion" style="width:100px">
+					<h:outputText value="#{fila.tipoAvion.nomTipoAvion}"/>
+				</p:column>
+				<p:column headerText="Capacidad">
+					<h:outputText value="#{fila.capacidad}"/>
+				</p:column>
+				<p:column headerText="Tarifa" style="width:100px">
+					<h:outputText value="#{fila.tarifa}">
+						<f:convertNumber minFractionDigits="2" currencySymbol="S/. " type="currency"
+						locale="en_US"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Fecha Partida" style="width:100px">
+					<h:outputText value="#{fila.fecPartida}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora de partida" style="width:100px">
+					<h:outputText value="#{fila.horaPartida}"/>
+				</p:column>
+				<p:column headerText="Fecha Llegada" style="width:100px">
+					<h:outputText value="#{fila.fecDestino}">
+						<f:convertDateTime pattern="dd/MM/yyyy" type="date"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Hora de llegada" style="width:100px">
+					<h:outputText value="#{fila.horaDestino}"/>
+				</p:column>
+				<p:column headerText="Tipo de Vuelo" style="width:280px">
+					<h:outputText value="#{fila.tipoVuelo.nomTipoVuelo}"/>
+				</p:column>
+			
+			
+			
+						
+		   </p:dataTable>
+		
+		   
+		</h:form>
+
+		
+		
+	</ui:define>
+</ui:composition>
+</html>
+
+
+

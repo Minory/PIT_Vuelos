@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name="tb_aerolinea")
 public class Aerolinea {
